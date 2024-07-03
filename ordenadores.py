@@ -28,24 +28,6 @@ def insertionSort(tamanho:int, lista:list) -> list:
       listaCopia[j+1] = chave
   return listaCopia
 
-def countingSort(tamanho:int, amplitude:int, lista:list) -> list:
-  listaCopia = lista[::]
-  maximo = amplitude
-  minimo = 0
-  range_ = maximo - minimo + 1
-  count = [0]*range_
-  saida = [0]*tamanho
-  for i in range(tamanho):
-    count[listaCopia[i]-minimo] += 1
-  for i in range(1, len(count)):
-    count[i] += count[i-1]
-  for i in range(tamanho-1, -1, -1):
-    saida[count[listaCopia[i]-minimo]-1] = listaCopia[i]
-    count[listaCopia[i]-minimo] -= 1
-  for i in range(tamanho):
-    listaCopia[i] = saida[i]
-  return listaCopia
-
 def mergeSort(lista):
   if len(lista) > 1:
       meio = len(lista) // 2
@@ -73,3 +55,15 @@ def mergeSort(lista):
       return listaCopia
   else:
       return lista
+
+def countingSort(tamanho:int, amplitude:int, lista:list) -> list:
+    listaFinal = [0]*tamanho
+    contador = [0]*(amplitude+1)
+    for i in range(tamanho): contador[lista[i]] += 1 #contagem de elementos
+    for i in range(1, amplitude + 1): contador[i] += contador[i-1] #soma de prefixos
+    for i in range(amplitude, 0, -1): contador[i] = contador[i-1] #shift para a direita
+    contador[0] = 0
+    for i in range(tamanho): #posicionamento dos elementos
+        listaFinal[contador[lista[i]]] = lista[i]
+        contador[lista[i]] += 1
+    return listaFinal
